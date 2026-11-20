@@ -3,23 +3,34 @@ public class Arguments {
                 {
                                 if (args.length == 0)
                                         return (5000);
-								else if (args.length == 1 && (args[0] == "-h" || args[0] == "--help"))
-								{
-										Help.display();
-										return (0);
-								}
 								else if (args.length == 1)
 								{
-										try {
-										final int port = Integer.parseInt(args[0]);
-										return (port);
-										}
-										catch (Exception e)
+										if (args[0].equals("-h") || args[0].equals("--help"))
+												return (Help.display());
+										else
 										{
-												System.err.println(e.getMessage());
-												return (0);
+												try
+												{
+														final int port = Integer.parseInt(args[0]);
+														if (port < 1 || port > 65535)
+														{
+																System.err.print("udpserv: ");
+																System.err.print("[ERROR]: ");
+																System.err.println("Port must be between 1 and 65535");
+																return (-1);
+														}
+														return (port);
+												}
+												catch (NumberFormatException e)
+												{
+														System.err.print("udpserv: [ERROR]: ");
+														System.err.println(e.getMessage());
+														return (-1);
+												}
 										}
 								}
-								return (0);
-                }
+								System.err.println("udpserv: [ERROR]: Argument list too long");
+								Help.display();
+								return (-1);
+				}
 }
